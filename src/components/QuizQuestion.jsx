@@ -6,111 +6,48 @@ export default function QuizQuestion({
   timer, answered, chosen, onChoose 
 }) {
   const catColor = CATEGORY_COLORS[question.category];
-  const progress = ((index) / total) * 100;
+  const progress = (index / total) * 100;
 
   return (
-    <div style={{
-      width: '100%',
-      maxWidth: 650,
-      margin: '0 auto',
-      padding: '0 16px',
-      animation: 'scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-    }}>
-      {/* Barra de progreso animada */}
-      <div style={{
-        background: 'rgba(255,255,255,0.05)',
-        borderRadius: '20px',
-        height: 6,
-        marginBottom: 24,
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          width: `${progress}%`,
-          height: '100%',
-          background: 'linear-gradient(90deg, #69bc6f, #fbbf24)',
-          borderRadius: '20px',
-          transition: 'width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-          boxShadow: '0 0 10px rgba(105,188,111,0.5)',
-        }} />
+    <div className="quiz-container">
+      {/* Progress bar estilo retro */}
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${progress}%` }}>
+          <span className="progress-text">{index}/{total}</span>
+        </div>
       </div>
 
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 24,
-        flexWrap: 'wrap',
-        gap: 12,
-      }}>
-        <span style={{
-          fontSize: 'clamp(11px, 3vw, 13px)',
-          color: 'rgba(255,255,255,0.5)',
-          padding: '6px 12px',
-          background: 'rgba(255,255,255,0.05)',
-          borderRadius: '20px',
-        }}>
-          Pregunta {index + 1} / {total}
-        </span>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: 'clamp(13px, 3.5vw, 16px)',
-            color: '#fbbf24',
-            fontWeight: 'bold',
-            background: 'rgba(251,191,36,0.1)',
-            padding: '6px 12px',
-            borderRadius: '20px',
-          }}>
-            {score}
-          </span>
-          <span style={{
-            fontSize: 'clamp(11px, 3vw, 13px)',
-            color: wrongCount >= 2 ? '#ef4444' : '#69bc6f',
-            background: wrongCount >= 2 ? 'rgba(239,68,68,0.1)' : 'rgba(105,188,111,0.1)',
-            padding: '6px 12px',
-            borderRadius: '20px',
-          }}>
-            {wrongCount}/{maxWrong}
-          </span>
+      {/* Header stats */}
+      <div className="quiz-header">
+        <div className="question-counter">
+          <span className="counter-label">QUESTION</span>
+          <span className="counter-value">{String(index + 1).padStart(2, '0')}</span>
+          <span className="counter-sep">/</span>
+          <span className="counter-total">{String(total).padStart(2, '0')}</span>
+        </div>
+        
+        <div className="score-stats">
+          <div className="stat-box">
+            <span className="stat-label">SCORE</span>
+            <span className="stat-value">{String(score).padStart(2, '0')}</span>
+          </div>
+          <div className="stat-box">
+            <span className="stat-label">FAILS</span>
+            <span className="stat-value">{wrongCount}/{maxWrong}</span>
+          </div>
           <Timer seconds={timer} total={20} />
         </div>
       </div>
 
-      {/* Question Card */}
-      <div style={{
-        background: 'rgba(18, 18, 28, 0.6)',
-        backdropFilter: 'blur(20px)',
-        border: `1px solid ${catColor.accent}33`,
-        borderRadius: 'clamp(24px, 6vw, 32px)',
-        padding: 'clamp(20px, 5vw, 28px)',
-        marginBottom: 20,
-        transition: 'all 0.3s ease',
-      }}>
-        <div style={{ marginBottom: 16 }}>
-          <span style={{
-            background: catColor.bg,
-            color: catColor.text,
-            padding: '6px 14px',
-            borderRadius: '30px',
-            fontSize: 'clamp(11px, 3vw, 12px)',
-            fontWeight: 600,
-            display: 'inline-block',
-          }}>
-            {question.category === 'music' ? 'Musica' : question.category === 'anime' ? 'Anime' : 'Caricaturas'}
-          </span>
+      {/* Question card */}
+      <div className="question-card">
+        <div className="category-tag" style={{ background: catColor.bg, color: catColor.text }}>
+          {question.category === 'music' ? 'MUSIC' : question.category === 'anime' ? 'ANIME' : 'CARTOONS'}
         </div>
 
-        <p style={{
-          fontSize: 'clamp(18px, 5vw, 24px)',
-          fontWeight: 700,
-          color: '#fff',
-          lineHeight: 1.4,
-          marginBottom: 28,
-        }}>
-          {question.question}
-        </p>
+        <p className="question-text">{question.question}</p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="options-grid">
           {question.options.map((opt, i) => {
             const isCorrect = i === question.answer;
             const isWrong = i === chosen && i !== question.answer;
@@ -121,108 +58,288 @@ export default function QuizQuestion({
                 key={i}
                 onClick={() => !answered && onChoose(i)}
                 disabled={answered}
+                className={`option-btn ${answered ? 'disabled' : ''} ${
+                  answered && isCorrect ? 'correct' : ''
+                } ${answered && isWrong ? 'wrong' : ''} ${
+                  isSelected && !answered ? 'selected' : ''
+                }`}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  width: '100%',
-                  padding: 'clamp(12px, 3.5vw, 14px) clamp(16px, 4vw, 20px)',
-                  background: answered
-                    ? isCorrect
-                      ? 'linear-gradient(135deg, rgba(74,222,128,0.2), rgba(74,222,128,0.05))'
-                      : isWrong
-                      ? 'linear-gradient(135deg, rgba(248,113,113,0.2), rgba(248,113,113,0.05))'
-                      : 'rgba(255,255,255,0.05)'
-                    : 'rgba(255,255,255,0.05)',
-                  border: answered
-                    ? isCorrect
-                      ? '2px solid #4ade80'
-                      : isWrong
-                      ? '2px solid #f87171'
-                      : '1px solid rgba(255,255,255,0.1)'
-                    : '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 'clamp(16px, 4vw, 20px)',
-                  color: '#fff',
-                  fontSize: 'clamp(13px, 3.5vw, 15px)',
-                  textAlign: 'left',
-                  cursor: answered ? 'default' : 'pointer',
-                  transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                  transform: isSelected && !answered ? 'scale(1.02)' : 'scale(1)',
-                  boxShadow: isSelected && !answered ? `0 0 20px ${catColor.accent}` : 'none',
+                  '--cat-accent': catColor.accent,
                 }}
-                onMouseEnter={(e) => {
-                  if (!answered) {
-                    e.currentTarget.style.transform = 'translateX(8px) scale(1.02)';
-                    e.currentTarget.style.borderColor = catColor.accent;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!answered && !isSelected) {
-                    e.currentTarget.style.transform = 'translateX(0) scale(1)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                  }
-                }}>
-                <span style={{
-                  width: 'clamp(28px, 7vw, 32px)',
-                  height: 'clamp(28px, 7vw, 32px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: answered && isCorrect
-                    ? '#4ade80'
-                    : answered && isWrong
-                    ? '#f87171'
-                    : 'rgba(255,255,255,0.1)',
-                  borderRadius: 'clamp(10px, 3vw, 12px)',
-                  fontSize: 'clamp(12px, 3.5vw, 14px)',
-                  fontWeight: 'bold',
-                  transition: 'all 0.3s ease',
-                }}>
-                  {LETTERS[i]}
-                </span>
-                <span style={{ flex: 1 }}>{opt}</span>
-                {answered && isCorrect && <span style={{ fontSize: 'clamp(16px, 4vw, 20px)' }}>✓</span>}
-                {answered && isWrong && <span style={{ fontSize: 'clamp(16px, 4vw, 20px)' }}>✗</span>}
+              >
+                <span className="option-letter">{LETTERS[i]}</span>
+                <span className="option-text">{opt}</span>
+                {answered && isCorrect && <span className="option-icon">✓</span>}
+                {answered && isWrong && <span className="option-icon">✗</span>}
               </button>
             );
           })}
         </div>
 
-        {/* Feedback animado */}
         {answered && (
-          <div style={{
-            marginTop: 24,
-            padding: 'clamp(12px, 3vw, 16px)',
-            background: chosen === question.answer
-              ? 'linear-gradient(135deg, rgba(74,222,128,0.15), rgba(74,222,128,0.05))'
-              : 'linear-gradient(135deg, rgba(248,113,113,0.15), rgba(248,113,113,0.05))',
-            borderRadius: 'clamp(16px, 4vw, 20px)',
-            fontSize: 'clamp(12px, 3vw, 13px)',
-            color: chosen === question.answer ? '#86efac' : '#fca5a5',
-            borderLeft: `4px solid ${chosen === question.answer ? '#4ade80' : '#f87171'}`,
-            animation: 'slideInFromLeft 0.4s ease-out',
-          }}>
-            {chosen === -1
-              ? `Tiempo agotado. Respuesta: ${question.options[question.answer]}`
-              : chosen === question.answer
-                ? `Correcto! ${question.explanation}`
-                : `${question.explanation}`}
+          <div className={`feedback-box ${chosen === question.answer ? 'feedback-correct' : 'feedback-wrong'}`}>
+            <span className="feedback-icon">{chosen === question.answer ? '▶' : '◀'}</span>
+            <span className="feedback-text">
+              {chosen === -1
+                ? `TIME OUT! Answer: ${question.options[question.answer]}`
+                : chosen === question.answer
+                  ? `CORRECT! ${question.explanation}`
+                  : `${question.explanation}`}
+            </span>
           </div>
         )}
       </div>
 
-      {/* Mensaje de espera */}
       {answered && (
-        <p style={{
-          textAlign: 'center',
-          fontSize: 'clamp(11px, 3vw, 12px)',
-          color: 'rgba(255,255,255,0.4)',
-          marginTop: 16,
-          animation: 'pulseGlow 1s infinite',
-        }}>
-          Cargando siguiente pregunta...
-        </p>
+        <p className="loading-message">◈ NEXT QUESTION ◈</p>
       )}
+
+      <style>{`
+        .quiz-container {
+          width: 100%;
+          max-width: 680px;
+          margin: 0 auto;
+          padding: 0 16px;
+          animation: scaleBounce 0.5s ease-out;
+        }
+
+        .progress-bar {
+          background: rgba(30, 41, 59, 0.5);
+          height: 8px;
+          margin-bottom: 24px;
+          position: relative;
+          border: 1px solid var(--border-color);
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--primary), var(--secondary));
+          width: 0%;
+          transition: width 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .progress-fill::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+          display: none;
+        }
+
+        .quiz-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .question-counter {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          background: rgba(0,0,0,0.3);
+          padding: 8px 16px;
+          border: 1px solid var(--border-color);
+        }
+
+        .counter-label {
+          font-size: 9px;
+          font-family: monospace;
+          letter-spacing: 2px;
+          color: #6b7280;
+        }
+
+        .counter-value, .counter-total {
+          font-size: 16px;
+          font-weight: 700;
+          font-family: monospace;
+          color: #e5e7eb;
+        }
+
+        .counter-sep {
+          color: var(--primary);
+          font-size: 12px;
+        }
+
+        .score-stats {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .stat-box {
+          display: flex;
+          flex-direction: column;
+          background: rgba(0,0,0,0.3);
+          padding: 6px 12px;
+          border: 1px solid var(--border-color);
+          min-width: 60px;
+          text-align: center;
+        }
+
+        .stat-label {
+          font-size: 8px;
+          font-family: monospace;
+          letter-spacing: 1px;
+          color: #6b7280;
+        }
+
+        .stat-value {
+          font-size: 14px;
+          font-weight: 700;
+          font-family: monospace;
+          color: #e5e7eb;
+        }
+
+        .question-card {
+          background: var(--card-bg);
+          backdrop-filter: blur(12px);
+          border: 2px solid var(--border-color);
+          padding: clamp(20px, 5vw, 28px);
+          margin-bottom: 20px;
+        }
+
+        .category-tag {
+          display: inline-block;
+          padding: 4px 12px;
+          font-size: 10px;
+          font-weight: 600;
+          font-family: monospace;
+          letter-spacing: 1px;
+          margin-bottom: 16px;
+          border: 1px solid currentColor;
+        }
+
+        .question-text {
+          font-size: clamp(16px, 4.5vw, 22px);
+          font-weight: 500;
+          color: #e5e7eb;
+          line-height: 1.5;
+          margin-bottom: 28px;
+        }
+
+        .options-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .option-btn {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          width: 100%;
+          padding: 12px 18px;
+          background: rgba(30, 41, 59, 0.6);
+          border: 1px solid var(--border-color);
+          color: #e5e7eb;
+          font-size: 14px;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .option-btn:not(.disabled):hover {
+          transform: translateX(6px);
+          border-color: var(--cat-accent);
+          background: rgba(107, 114, 128, 0.2);
+        }
+
+        .option-btn.selected {
+          border-color: var(--cat-accent);
+          background: rgba(107, 114, 128, 0.3);
+          transform: scale(1.01);
+        }
+
+        .option-btn.disabled {
+          cursor: default;
+          opacity: 0.7;
+        }
+
+        .option-btn.correct {
+          border-color: #10b981;
+          background: rgba(16, 185, 129, 0.15);
+        }
+
+        .option-btn.wrong {
+          border-color: #ef4444;
+          background: rgba(239, 68, 68, 0.15);
+        }
+
+        .option-letter {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,0,0,0.4);
+          font-weight: 700;
+          font-family: monospace;
+          font-size: 14px;
+          border: 1px solid var(--border-color);
+        }
+
+        .option-text {
+          flex: 1;
+        }
+
+        .option-icon {
+          font-size: 18px;
+        }
+
+        .feedback-box {
+          margin-top: 20px;
+          padding: 12px 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 12px;
+          font-family: monospace;
+          animation: slideUp 0.3s ease-out;
+        }
+
+        .feedback-correct {
+          background: rgba(16, 185, 129, 0.1);
+          border-left: 4px solid #10b981;
+          color: #6ee7b7;
+        }
+
+        .feedback-wrong {
+          background: rgba(239, 68, 68, 0.1);
+          border-left: 4px solid #ef4444;
+          color: #fca5a5;
+        }
+
+        .feedback-icon {
+          font-size: 14px;
+        }
+
+        .loading-message {
+          text-align: center;
+          font-size: 10px;
+          font-family: monospace;
+          letter-spacing: 2px;
+          color: #6b7280;
+          margin-top: 16px;
+          animation: pixelPulse 1s infinite;
+        }
+      `}</style>
     </div>
   );
 }

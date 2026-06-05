@@ -1,10 +1,9 @@
 import { CATEGORIES, CATEGORY_COLORS } from '../data/questions.js';
 import { useState, useEffect } from 'react';
 
-export default function StartScreen({ onStart, highScore, remainingAttempts }) {
+export default function StartScreen({ onStart, highScore, lives }) {
   const [selectedCat, setSelectedCat] = useState(null);
   const categoriesList = Object.entries(CATEGORIES);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -13,197 +12,54 @@ export default function StartScreen({ onStart, highScore, remainingAttempts }) {
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
-    const handleMouseMove = (e) => {
-      if (!isMobile) {
-        setMousePosition({ x: e.clientX, y: e.clientY });
-      }
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [isMobile]);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      maxWidth: 600,
-      margin: '0 auto',
-      padding: '0 16px',
-      animation: 'scaleIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-    }}>
-      {!isMobile && (
-        <div style={{
-          position: 'absolute',
-          width: '300px',
-          height: '300px',
-          background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(105,188,111,0.15), transparent)`,
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          transition: 'transform 0.1s ease',
-          transform: 'translate(-50%, -50%)',
-          top: mousePosition.y,
-          left: mousePosition.x,
-          zIndex: 0,
-        }} />
-      )}
-      
-      <div style={{
-        position: 'relative',
-        zIndex: 1,
-        background: 'rgba(10, 10, 20, 0.4)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: 'clamp(24px, 6vw, 40px)',
-        padding: 'clamp(24px, 6vw, 40px) clamp(20px, 5vw, 32px)',
-        border: '1px solid rgba(105, 188, 111, 0.3)',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(105, 188, 111, 0.1) inset',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-      }}>
-        
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(24px, 6vw, 32px)' }}>
-          <div style={{
-            display: 'inline-block',
-            background: 'linear-gradient(135deg, rgba(105,188,111,0.2), rgba(251,191,36,0.1))',
-            padding: '6px 16px',
-            borderRadius: '50px',
-            fontSize: 'clamp(11px, 3vw, 13px)',
-            fontWeight: 600,
-            color: '#69bc6f',
-            marginBottom: 'clamp(16px, 4vw, 24px)',
-            letterSpacing: '1px',
-            animation: 'pulseGlow 2s infinite',
-          }}>
-            ELIGE TU CATEGORIA
+    <div className="start-container">
+      <div className="start-card">
+        {/* Pixel corner decorations */}
+        <div className="pixel-corner top-left"></div>
+        <div className="pixel-corner top-right"></div>
+        <div className="pixel-corner bottom-left"></div>
+        <div className="pixel-corner bottom-right"></div>
+
+        <div className="start-header">
+          <div className="start-badge">
+            ◈ NEW GAME ◈
           </div>
           
-          <h2 style={{
-            fontSize: 'clamp(32px, 8vw, 64px)',
-            fontWeight: 800,
-            marginBottom: 'clamp(12px, 3vw, 16px)',
-            background: 'linear-gradient(135deg, #69bc6f, #fbbf24, #69bc6f)',
-            backgroundSize: '200% auto',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            animation: 'shimmerMove 3s linear infinite, textReveal 0.8s ease-out',
-          }}>
+          <h1 className="start-title">
             UTVT QUIZ
-          </h2>
+          </h1>
           
-          <p style={{ 
-            fontSize: 'clamp(13px, 3.5vw, 15px)', 
-            color: 'rgba(255,255,255,0.6)',
-            animation: 'slideInFromRight 0.6s ease-out',
-          }}>
-            15 preguntas · 20 segundos cada una
-          </p>
+          <div className="start-stats">
+            <span className="stat-item">15 QUESTIONS</span>
+            <span className="stat-divider">◆</span>
+            <span className="stat-item">20 SECONDS</span>
+            <span className="stat-divider">◆</span>
+            <span className="stat-item">3 CATEGORIES</span>
+          </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 'clamp(10px, 3vw, 16px)',
-          marginBottom: 'clamp(24px, 6vw, 36px)',
-        }}>
-          {[
-            { label: 'Preguntas', value: '15', icon: '📚' },
-            { label: 'Segundos', value: '20', icon: '⏰' },
-            { label: 'Categorías', value: '3', icon: '🎨' },
-          ].map((stat, idx) => (
-            <div
-              key={stat.label}
-              style={{
-                background: 'rgba(26, 26, 36, 0.6)',
-                backdropFilter: 'blur(10px)',
-                padding: 'clamp(12px, 3vw, 16px) clamp(8px, 2vw, 12px)',
-                borderRadius: 'clamp(16px, 4vw, 24px)',
-                border: '1px solid rgba(105, 188, 111, 0.3)',
-                transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                animation: `slideInFromLeft ${0.5 + idx * 0.1}s cubic-bezier(0.68, -0.55, 0.265, 1.55)`,
-                textAlign: 'center',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px) scale(1.05)';
-                e.currentTarget.style.borderColor = 'rgba(105, 188, 111, 0.8)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(105, 188, 111, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.borderColor = 'rgba(105, 188, 111, 0.3)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}>
-              <div style={{ 
-                fontSize: 'clamp(24px, 6vw, 32px)', 
-                marginBottom: 'clamp(4px, 2vw, 8px)',
-                animation: 'floatAround 3s ease-in-out infinite',
-              }}>{stat.icon}</div>
-              <div style={{ 
-                fontSize: 'clamp(22px, 6vw, 28px)', 
-                fontWeight: 800, 
-                color: '#fff' 
-              }}>{stat.value}</div>
-              <div style={{ 
-                fontSize: 'clamp(9px, 2.5vw, 11px)', 
-                color: 'rgba(255,255,255,0.5)', 
-                letterSpacing: '0.5px' 
-              }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ marginBottom: 'clamp(24px, 6vw, 32px)' }}>
-          <p style={{ 
-            fontSize: 'clamp(10px, 2.5vw, 12px)', 
-            color: 'rgba(255,255,255,0.5)', 
-            marginBottom: 'clamp(16px, 4vw, 20px)',
-            letterSpacing: '1px',
-            textAlign: 'center',
-          }}>
-            SELECCIONA UNA CATEGORIA
-          </p>
-          <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: 'clamp(8px, 2.5vw, 12px)', 
-            justifyContent: 'center' 
-          }}>
-            {categoriesList.map(([key, name], idx) => {
+        <div className="categories-section">
+          <p className="categories-label">SELECT CATEGORY</p>
+          <div className="categories-grid">
+            {categoriesList.map(([key, name]) => {
               const c = CATEGORY_COLORS[key];
               const isSelected = selectedCat === key;
               return (
                 <button
                   key={key}
                   onClick={() => setSelectedCat(key)}
+                  className={`category-btn ${isSelected ? 'selected' : ''}`}
                   style={{
-                    background: isSelected ? c.accent : `${c.bg}`,
-                    color: c.text,
-                    border: `2px solid ${c.accent}`,
-                    borderRadius: '50px',
-                    padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 4vw, 24px)',
-                    fontSize: 'clamp(12px, 3vw, 14px)',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                    transform: isSelected ? 'scale(1.08)' : 'scale(1)',
-                    boxShadow: isSelected ? `0 0 25px ${c.accent}` : 'none',
-                    animation: `slideInFromRight ${0.3 + idx * 0.05}s ease-out`,
-                    whiteSpace: 'nowrap',
+                    '--cat-bg': c.bg,
+                    '--cat-accent': c.accent,
+                    '--cat-text': c.text,
                   }}
-                  onMouseEnter={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-                      e.currentTarget.style.boxShadow = `0 5px 20px ${c.accent}80`;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }
-                  }}>
+                >
+                  <span className="category-marker">▶</span>
                   {name}
                 </button>
               );
@@ -214,57 +70,248 @@ export default function StartScreen({ onStart, highScore, remainingAttempts }) {
         <button
           onClick={() => selectedCat && onStart(selectedCat)}
           disabled={!selectedCat}
-          style={{
-            width: '100%',
-            padding: 'clamp(14px, 4vw, 16px)',
-            background: selectedCat ? 'linear-gradient(135deg, #69bc6f, #4a9f4f)' : '#444',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '50px',
-            fontSize: 'clamp(14px, 4vw, 18px)',
-            fontWeight: 800,
-            cursor: selectedCat ? 'pointer' : 'not-allowed',
-            opacity: selectedCat ? 1 : 0.5,
-            marginBottom: 'clamp(20px, 5vw, 24px)',
-            transition: 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-          onMouseEnter={(e) => {
-            if (selectedCat) {
-              e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(105, 188, 111, 0.6)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (selectedCat) {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }
-          }}>
-          {selectedCat ? 'COMENZAR QUIZ' : 'ELIGE UNA CATEGORIA'}
+          className={`start-btn ${selectedCat ? 'active' : ''}`}
+        >
+          <span className="btn-arrow">►</span>
+          {selectedCat ? 'START GAME' : 'SELECT CATEGORY'}
+          <span className="btn-arrow">◄</span>
         </button>
 
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: 'clamp(16px, 5vw, 24px)', 
-          fontSize: 'clamp(11px, 3vw, 13px)',
-          flexWrap: 'wrap',
-        }}>
+        <div className="start-footer">
           {highScore > 0 && (
-            <span style={{ 
-              color: '#fbbf24',
-              animation: 'pulseGlow 2s infinite',
-            }}>
-              Record: {highScore}/15
-            </span>
+            <div className="highscore-box">
+              <span className="highscore-label">★ HIGH SCORE</span>
+              <span className="highscore-value">{highScore}/15</span>
+            </div>
           )}
-          <span style={{ color: '#69bc6f' }}>
-            Intentos: {remainingAttempts}
-          </span>
+          <div className="lives-box">
+            <span className="lives-label">◈ LIVES REMAINING</span>
+            <span className="lives-value">{lives}</span>
+          </div>
         </div>
       </div>
+
+      <style>{`
+        .start-container {
+          position: relative;
+          width: 100%;
+          max-width: 560px;
+          margin: 0 auto;
+          padding: 0 16px;
+          animation: scaleBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .start-card {
+          position: relative;
+          background: var(--card-bg);
+          backdrop-filter: blur(12px);
+          border: 2px solid var(--border-color);
+          padding: clamp(28px, 6vw, 40px) clamp(20px, 5vw, 32px);
+          transition: all 0.3s ease;
+        }
+
+        .start-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          border-color: rgba(107, 114, 128, 0.6);
+        }
+
+        /* Pixel corners */
+        .pixel-corner {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          background: var(--primary);
+          opacity: 0.5;
+        }
+
+        .top-left { top: -2px; left: -2px; }
+        .top-right { top: -2px; right: -2px; }
+        .bottom-left { bottom: -2px; left: -2px; }
+        .bottom-right { bottom: -2px; right: -2px; }
+
+        .start-header {
+          text-align: center;
+          margin-bottom: 32px;
+        }
+
+        .start-badge {
+          display: inline-block;
+          background: rgba(107, 114, 128, 0.2);
+          padding: 6px 16px;
+          font-size: 10px;
+          font-weight: 600;
+          font-family: monospace;
+          letter-spacing: 2px;
+          color: var(--primary);
+          margin-bottom: 20px;
+          border: 1px solid var(--border-color);
+        }
+
+        .start-title {
+          font-size: clamp(32px, 8vw, 52px);
+          font-weight: 700;
+          font-family: 'Space Grotesk', monospace;
+          color: #e5e7eb;
+          letter-spacing: 4px;
+          margin-bottom: 16px;
+          text-transform: uppercase;
+        }
+
+        .start-stats {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .stat-item {
+          font-size: 11px;
+          font-family: monospace;
+          color: #9ca3af;
+          letter-spacing: 1px;
+        }
+
+        .stat-divider {
+          color: var(--primary);
+          font-size: 10px;
+        }
+
+        .categories-section {
+          margin-bottom: 32px;
+        }
+
+        .categories-label {
+          font-size: 10px;
+          font-family: monospace;
+          letter-spacing: 2px;
+          color: #6b7280;
+          margin-bottom: 16px;
+          text-align: center;
+        }
+
+        .categories-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
+        }
+
+        .category-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          background: rgba(30, 41, 59, 0.6);
+          border: 1px solid var(--border-color);
+          color: #e5e7eb;
+          font-size: 13px;
+          font-weight: 500;
+          font-family: monospace;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+          letter-spacing: 1px;
+        }
+
+        .category-marker {
+          font-size: 10px;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+
+        .category-btn:hover {
+          transform: translateY(-2px);
+          border-color: var(--primary);
+          background: rgba(107, 114, 128, 0.2);
+        }
+
+        .category-btn:hover .category-marker {
+          opacity: 1;
+        }
+
+        .category-btn.selected {
+          background: var(--cat-accent);
+          border-color: var(--cat-accent);
+          color: #fff;
+          transform: scale(1.02);
+          box-shadow: 0 0 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .category-btn.selected .category-marker {
+          opacity: 1;
+        }
+
+        .start-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          padding: 14px;
+          background: #374151;
+          border: none;
+          color: #9ca3af;
+          font-size: 14px;
+          font-weight: 600;
+          font-family: monospace;
+          letter-spacing: 2px;
+          cursor: not-allowed;
+          margin-bottom: 24px;
+          transition: all 0.2s ease;
+        }
+
+        .start-btn.active {
+          background: var(--primary);
+          color: #fff;
+          cursor: pointer;
+        }
+
+        .start-btn.active:hover {
+          transform: translateY(-2px);
+          filter: drop-shadow(0 5px 15px rgba(107, 114, 128, 0.5));
+        }
+
+        .btn-arrow {
+          font-size: 12px;
+          opacity: 0.7;
+        }
+
+        .start-footer {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .highscore-box, .lives-box {
+          display: flex;
+          gap: 8px;
+          padding: 6px 12px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid var(--border-color);
+        }
+
+        .highscore-label, .lives-label {
+          font-size: 9px;
+          font-family: monospace;
+          letter-spacing: 1px;
+          color: #6b7280;
+        }
+
+        .highscore-value {
+          font-size: 12px;
+          font-weight: bold;
+          font-family: monospace;
+          color: #fbbf24;
+        }
+
+        .lives-value {
+          font-size: 12px;
+          font-weight: bold;
+          font-family: monospace;
+          color: #f87171;
+        }
+      `}</style>
     </div>
   );
 }

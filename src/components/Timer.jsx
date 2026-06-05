@@ -2,13 +2,8 @@ import { useEffect, useState } from 'react';
 
 export default function Timer({ seconds, total }) {
   const percentage = (seconds / total) * 100;
-  const color = seconds <= 5 ? '#ef4444' : seconds <= 10 ? '#fbbf24' : '#69bc6f';
+  const color = seconds <= 5 ? '#ef4444' : seconds <= 10 ? '#f59e0b' : '#6b7280';
   const [scale, setScale] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth <= 768);
-  }, []);
 
   useEffect(() => {
     setScale(1.1);
@@ -16,70 +11,75 @@ export default function Timer({ seconds, total }) {
     return () => clearTimeout(timer);
   }, [seconds]);
 
-  const circleSize = isMobile ? 40 : 48;
-  const radius = circleSize / 2 - 4;
-  const circumference = 2 * Math.PI * radius;
-
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: isMobile ? 6 : 10,
-      animation: 'fadeInRight 0.5s ease-out',
-    }}>
-      <div style={{
-        position: 'relative',
-        width: circleSize,
-        height: circleSize,
-      }}>
-        <svg style={{
-          transform: 'rotate(-90deg)',
-          width: '100%',
-          height: '100%',
-        }}>
+    <div className="timer-wrapper">
+      <div className="timer-container">
+        <svg className="timer-svg" viewBox="0 0 40 40">
           <circle
-            cx={circleSize / 2}
-            cy={circleSize / 2}
-            r={radius}
+            cx="20"
+            cy="20"
+            r="16"
             fill="none"
-            stroke="rgba(255,255,255,0.1)"
-            strokeWidth={isMobile ? 3 : 4}
+            stroke="rgba(75, 85, 99, 0.3)"
+            strokeWidth="3"
           />
           <circle
-            cx={circleSize / 2}
-            cy={circleSize / 2}
-            r={radius}
+            cx="20"
+            cy="20"
+            r="16"
             fill="none"
             stroke={color}
-            strokeWidth={isMobile ? 3 : 4}
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference * (1 - percentage / 100)}
+            strokeWidth="3"
+            strokeDasharray="100.53"
+            strokeDashoffset={100.53 * (1 - percentage / 100)}
             style={{
               transition: 'stroke-dashoffset 0.3s ease, stroke 0.3s ease',
-              filter: `drop-shadow(0 0 5px ${color})`,
             }}
           />
         </svg>
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: `translate(-50%, -50%) scale(${scale})`,
-          fontSize: isMobile ? '12px' : '14px',
-          fontWeight: 'bold',
-          color: color,
-          transition: 'transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        }}>
+        <div className="timer-value" style={{ transform: `scale(${scale})`, color }}>
           {seconds}
         </div>
       </div>
-      <span style={{ 
-        fontSize: isMobile ? '9px' : '11px', 
-        color: 'rgba(255,255,255,0.4)', 
-        letterSpacing: '0.5px' 
-      }}>
-        seg
-      </span>
+      <span className="timer-label">SEC</span>
+
+      <style>{`
+        .timer-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .timer-container {
+          position: relative;
+          width: 40px;
+          height: 40px;
+        }
+
+        .timer-svg {
+          width: 100%;
+          height: 100%;
+          transform: rotate(-90deg);
+        }
+
+        .timer-value {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 12px;
+          font-weight: 700;
+          font-family: monospace;
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timer-label {
+          font-size: 9px;
+          font-family: monospace;
+          letter-spacing: 1px;
+          color: #6b7280;
+        }
+      `}</style>
     </div>
   );
 }
