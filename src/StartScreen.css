@@ -1,0 +1,195 @@
+    .start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at 20% 30%, #1a2a1a, #0a0a0a);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    animation: fadeInScale 0.8s ease-out;
+    }
+
+    .start-card {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 32px 24px;
+    border: 1px solid rgba(105, 188, 111, 0.2);
+    animation: fadeInUp 0.6s ease-out;
+    transition: all 0.3s ease;
+    }
+
+    .start-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .start-header {
+    margin-bottom: 32px;
+    }
+
+    .start-badge {
+    display: inline-block;
+    background: rgba(105, 188, 111, 0.2);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    color: #69bc6f;
+    margin-bottom: 16px;
+    backdrop-filter: blur(4px);
+    animation: pulse 2s ease-in-out infinite;
+    }
+
+    .start-title {
+    font-size: clamp(32px, 8vw, 48px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #69bc6f, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: float 3s ease-in-out infinite;
+    }
+
+    .start-subtitle {
+    font-size: 14px;
+    color: #ccc;
+    }
+
+    .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+    }
+
+    .stat-card {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(4px);
+    padding: 12px 8px;
+    border-radius: 16px;
+    border: 1px solid rgba(105, 188, 111, 0.3);
+    transition: all 0.3s ease;
+    animation: fadeInScale 0.5s ease-out both;
+    }
+
+    .stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(105, 188, 111, 0.8);
+    box-shadow: 0 5px 15px rgba(105, 188, 111, 0.2);
+    }
+
+    .stat-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover .stat-icon {
+    transform: scale(1.1);
+    }
+
+    .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    }
+
+    .stat-label {
+    font-size: 10px;
+    color: #aaa;
+    }
+
+    .categories-section {
+    margin-bottom: 28px;
+    }
+
+    .categories-title {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 16px;
+    }
+
+    .categories-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    }
+
+    .category-button {
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--cat-bg);
+    color: var(--cat-text);
+    border: 1px solid var(--cat-accent);
+    animation: fadeInScale 0.4s ease-out both;
+    }
+
+    .category-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .category-button.selected {
+    background: var(--cat-accent);
+    color: white;
+    box-shadow: 0 0 20px var(--cat-accent);
+    animation: pulse 1s ease-in-out;
+    }
+
+    .start-button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: not-allowed;
+    opacity: 0.5;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    }
+
+    .start-button.active {
+    background: linear-gradient(135deg, #69bc6f, #4a9f4f);
+    color: #fff;
+    cursor: pointer;
+    opacity: 1;
+    box-shadow: 0 5px 20px rgba(105, 188, 111, 0.4);
+    }
+
+    .start-button.active:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(105, 188, 111, 0.6);
+    }
+
+    .footer-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+    }
+
+    .highscore {
+    color: #fbbf24;
+    }
+
+    .attempts {
+    color: #69bc6f;
+    }
